@@ -2,20 +2,17 @@ from airflow import DAG
 from airflow.providers.http.operators.http import SimpleHttpOperator
 from airflow.providers.http.sensors.http import HttpSensor
 from airflow.models import Variable
-
 import pendulum
 import json
-import logging
 
 """
-This file demonstrates a simple Airflow DAG that triggers a the Airbyte API running in Airbyte Cloud
-The operations that are demonstrated are "sync" and "jobs" (status).
+This file demonstrates a simple Airflow DAG that triggers a sync using the Airbyte API on a connection that 
+is running in Airbyte Cloud, and that then waits for that sync to succeed.
+The Airbyte API endpoints that are demonstrated are "sync" and "jobs" (status).
+For more information, consult the Airbyte API at https://reference.airbyte.com/reference/start
 """
-
 AIRBYTE_CONNECTION_ID = Variable.get("MY_EXAMPLE_CONNECTION_ID")
 API_KEY = f'Bearer {Variable.get("CLOUD_API_TOKEN")}'
-
-task_logger = logging.getLogger('airflow.task')
 
 with DAG(dag_id='airbyte_api_sync_demo',
          default_args={'owner': 'airflow'},
